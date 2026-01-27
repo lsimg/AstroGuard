@@ -13,7 +13,7 @@
 * **Sensor Fusion:** Combines AI-driven trend analysis with **FFT (Fast Fourier Transform)** spectral analysis to verify physical defects.
 * **Edge-Optimized:** Built with `scikit-learn` for lightweight performance, ready for deployment on onboard satellite computers (OBC) via Docker.
 * **Mission Control Dashboard:** A "Houston-style" interface for real-time monitoring of onboard time, health status, and spectral signatures.
-
+ 
 ##  Tech Stack
 
 * **Core:** Python 3.10
