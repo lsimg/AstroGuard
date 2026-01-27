@@ -26,21 +26,21 @@ st.markdown("""
 
 st.title("🛰️ AstroGuard: Predictive Maintenance Suite")
 
-# --- БОКОВАЯ ПАНЕЛЬ ---
+
 st.sidebar.header("Control Panel")
-default_path = r'D:\Spacecraft Fault Prediction\IMS\IMS\2nd_test\2nd_test'  # ПРОВЕРЬТЕ ПУТЬ!
+default_path = r'D:\Spacecraft Fault Prediction\IMS\IMS\2nd_test\2nd_test'
 data_path = st.sidebar.text_input("Data Source:", default_path)
 speed = st.sidebar.slider("Simulation Speed (ms)", 10, 500, 50)
 window_size = st.sidebar.slider("Smoothing Window", 5, 50, 20)
 start_btn = st.sidebar.button("▶ INITIATE MISSION")
 
 
-# --- ФУНКЦИИ ---
+
 def parse_timestamp(filename):
-    # Превращаем "2004.02.12.10.32.39" в красивую дату
+
     try:
         parts = filename.split('.')
-        # Берем только цифры даты/времени
+
         dt_str = ".".join(parts[:6])
         dt_obj = datetime.strptime(dt_str, "%Y.%m.%d.%H.%M.%S")
         return dt_obj.strftime("%Y-%m-%d %H:%M:%S UTC")
@@ -56,10 +56,11 @@ def compute_fft(signal, sample_rate=20000):
     return xf[idx], 2.0 / N * np.abs(yf[idx])
 
 
+#Обучение ИИшки
 @st.cache_resource
 def init_system(path):
     files = sorted([f for f in os.listdir(path) if not f.startswith('.')])
-    # Обучение на старте (0-300 файлы)
+
     train_files = files[:300]
 
     data_list = []
@@ -84,7 +85,7 @@ def init_system(path):
     return model, scaler, files, threshold
 
 
-# --- ЛОГИКА ---
+
 if start_btn and os.path.exists(data_path):
     status_text = st.sidebar.empty()
     status_text.info("Booting AI Core...")
@@ -113,11 +114,11 @@ if start_btn and os.path.exists(data_path):
         st.subheader("Diagnostic Log")
         log_placeholder = st.empty()
 
-    # Буферы
+
     trend_history = deque(maxlen=window_size)
     plot_data = []
 
-    # Стартуем с 300 (чтобы увидеть переход от нормы к аварии)
+
     start_index = 300
 
     for i in range(start_index, len(all_files), 5):
@@ -125,11 +126,11 @@ if start_btn and os.path.exists(data_path):
         filepath = os.path.join(data_path, filename)
 
         try:
-            # 1. Время
+
             current_time = parse_timestamp(filename)
             time_placeholder.markdown(f'<div class="time-display">{current_time}</div>', unsafe_allow_html=True)
 
-            # 2. Данные и ИИ
+
             df_raw = pd.read_csv(filepath, sep='\t', header=None)
             signal = df_raw[0].values
 
@@ -138,23 +139,22 @@ if start_btn and os.path.exists(data_path):
             reconstruction = model.predict(rms_scaled)
             instant_loss = np.mean(np.square(rms_scaled - reconstruction))
 
-            # Сглаживание
+
             trend_history.append(instant_loss)
             current_trend = sum(trend_history) / len(trend_history)
             plot_data.append(current_trend)
 
-            # 3. RUL (Прогноз времени жизни) - Самая сложная часть!
-            # Мы смотрим: как быстро растет тренд?
+
             growth_rate = 0
             rul_text = "CALCULATING..."
             rul_color = "gray"
 
             if len(plot_data) > 10:
-                # Берем разницу между сейчас и 10 шагов назад
+
                 growth = current_trend - plot_data[-10]
-                if growth > 0.0001:  # Если растет
+                if growth > 0.0001:
                     steps_left = (threshold * 3 - current_trend) / (growth / 10)
-                    # 1 файл = 10 минут
+
                     hours_left = (steps_left * 10) / 60
                     if hours_left < 0: hours_left = 0
 
@@ -172,7 +172,7 @@ if start_btn and os.path.exists(data_path):
                 f"<h2 style='text-align: center; color: {rul_color}; border: 1px solid #333; border-radius: 5px;'>{rul_text}</h2>",
                 unsafe_allow_html=True)
 
-            # 4. Статусы и Объяснимость
+
             if current_trend < threshold:
                 status_msg = f"""
                 <div class="metric-card status-ok">
@@ -200,7 +200,7 @@ if start_btn and os.path.exists(data_path):
 
             log_placeholder.markdown(status_msg, unsafe_allow_html=True)
 
-            # 5. Графики
+
             chart_df = pd.DataFrame({'Anomaly Score': plot_data, 'Limit': [threshold] * len(plot_data)})
             chart_placeholder.line_chart(chart_df, color=["#00ff00", "#ff0000"])
 
