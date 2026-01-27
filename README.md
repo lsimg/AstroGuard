@@ -1,4 +1,4 @@
-# 🛰️ AstroGuard: AI-Driven Spacecraft Predictive Maintenance
+#  AstroGuard: AI-Driven Spacecraft Predictive Maintenance
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
@@ -6,7 +6,7 @@
 
 **AstroGuard** is an Edge AI predictive maintenance system designed to detect early-stage anomalies in spacecraft reaction wheels. By analyzing vibration telemetry in real-time, it predicts mechanical failures days before they become critical, preventing mission loss (e.g., Kepler telescope scenario).
 
-## 🚀 Key Features
+##  Key Features
 
 * **Early Anomaly Detection:** Uses an **Autoencoder Neural Network (Unsupervised Learning)** to identify deviations from the "healthy" baseline without needing historical failure data.
 * **RUL Prediction:** Calculates **Remaining Useful Life** in hours, allowing engineers to switch to redundant systems safely.
@@ -14,7 +14,7 @@
 * **Edge-Optimized:** Built with `scikit-learn` for lightweight performance, ready for deployment on onboard satellite computers (OBC) via Docker.
 * **Mission Control Dashboard:** A "Houston-style" interface for real-time monitoring of onboard time, health status, and spectral signatures.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 * **Core:** Python 3.10
 * **Machine Learning:** Scikit-learn (MLPRegressor / Autoencoder)
@@ -22,7 +22,7 @@
 * **Visualization & UI:** Streamlit, Matplotlib
 * **Data Processing:** Pandas, NumPy
 
-## 📂 Project Structure
+##  Project Structure
 
 This repository contains two implementations of the anomaly detection system, demonstrating the transition from research to edge deployment:
 
@@ -38,13 +38,13 @@ This repository contains two implementations of the anomaly detection system, de
 
 ---
 
-## 📊 Data Source
+##  Data Source
 
 The model was trained and validated using the **NASA IMS Bearing Dataset** (PCoE).
 * **Experiment:** Rexnord ZA-2115 bearings subjected to 6000 lbs load at 2000 RPM until failure (35 days test).
 * **Source:** [NASA Open Data Portal](https://data.nasa.gov/dataset/ims-bearings) provided by the Center for Intelligent Maintenance Systems (IMS), University of Cincinnati.
 
-## ⚙️ Installation & Usage
+##  Installation & Usage
 
 1.  **Clone the repository:**
     ```bash
