@@ -22,6 +22,22 @@
 * **Visualization & UI:** Streamlit, Matplotlib
 * **Data Processing:** Pandas, NumPy
 
+## 📂 Project Structure
+
+This repository contains two implementations of the anomaly detection system, demonstrating the transition from research to edge deployment:
+
+### 1. `main.py` (Research Prototype)
+* **Engine:** TensorFlow / Keras.
+* **Purpose:** Initial research and proof of concept. Uses a Deep Learning Autoencoder to analyze the raw dataset and plot static matplotlib graphs.
+* **Note:** Requires `tensorflow` installed manually. Contains hardcoded paths for local testing.
+
+### 2. `app.py` (Production / Edge)
+* **Engine:** Scikit-learn (MLPRegressor).
+* **Purpose:** Optimized version for embedded systems.
+* **Optimization:** We migrated from TensorFlow to Scikit-learn to reduce the model size by **98%** and improve inference speed for onboard satellite hardware (OBC), while maintaining detection accuracy.
+
+---
+
 ## 📊 Data Source
 
 The model was trained and validated using the **NASA IMS Bearing Dataset** (PCoE).
