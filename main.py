@@ -73,4 +73,5 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
+
 print(f"Порог тревоги установлен на {threshold:.4f}")

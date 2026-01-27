@@ -10,7 +10,7 @@ from sklearn.neural_network import MLPRegressor
 import matplotlib.pyplot as plt
 from collections import deque
 
-# --- КОНФИГУРАЦИЯ ---
+
 st.set_page_config(page_title="AstroGuard Ultimate", page_icon="🛰️", layout="wide")
 
 st.markdown("""
