@@ -416,6 +416,7 @@ if start_btn:
 
             time.sleep(speed / 1000)
 
+
         except Exception as exc:
             log_placeholder.error(f"Processing halted near '{filename}': {exc}")
             break
