@@ -11,7 +11,6 @@ from scipy.fft import fft, fftfreq
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import MinMaxScaler
 
-
 st.set_page_config(
     page_title="AstroGuard Ultimate",
     page_icon=":satellite_antenna:",
@@ -136,24 +135,31 @@ st.title("AstroGuard: Predictive Maintenance Suite")
 st.caption("Demo mode: NASA IMS bearing dataset replay (not live spacecraft telemetry).")
 
 st.sidebar.header("Control Panel")
-default_path = r"D:\Spacecraft Fault Prediction\IMS\IMS\2nd_test\2nd_test"
+# ИЗМЕНЕНО: Относительный путь, который будет работать внутри Docker
+default_path = "./IMS"
 
 
 def browse_data_folder(initial_dir: str) -> str:
-    import tkinter as tk
-    from tkinter import filedialog
-
-    root = tk.Tk()
-    root.withdraw()
-    root.wm_attributes("-topmost", 1)
+    # ИЗМЕНЕНО: Добавлена защита (try-except) для работы без графического интерфейса в Docker
     try:
-        selected = filedialog.askdirectory(
-            initialdir=initial_dir if os.path.isdir(initial_dir) else os.getcwd(),
-            title="Select telemetry data folder",
-        )
-    finally:
-        root.destroy()
-    return selected
+        import tkinter as tk
+        from tkinter import filedialog
+
+        # Если мы в Linux без монитора, tkinter упадет здесь
+        root = tk.Tk()
+        root.withdraw()
+        root.wm_attributes("-topmost", 1)
+        try:
+            selected = filedialog.askdirectory(
+                initialdir=initial_dir if os.path.isdir(initial_dir) else os.getcwd(),
+                title="Select telemetry data folder",
+            )
+        finally:
+            root.destroy()
+        return selected
+    except Exception:
+        # Вместо краша выдаем понятную ошибку
+        raise Exception("Кнопка недоступна в Docker. Введите путь вручную (например, ./IMS)")
 
 
 if "data_path" not in st.session_state:
@@ -214,7 +220,7 @@ def init_system(path: str):
     for filename in train_files[::2]:
         try:
             df = pd.read_csv(os.path.join(path, filename), sep="\t", header=None)
-            rms = np.sqrt((df**2).mean())
+            rms = np.sqrt((df ** 2).mean())
             data_list.append(rms.values)
         except Exception:
             continue
@@ -308,7 +314,7 @@ if start_btn:
             df_raw = pd.read_csv(filepath, sep="\t", header=None)
             signal = df_raw[0].values
 
-            rms_current = np.sqrt((df_raw**2).mean()).values.reshape(1, -1)
+            rms_current = np.sqrt((df_raw ** 2).mean()).values.reshape(1, -1)
             rms_scaled = scaler.transform(rms_current)
             reconstruction = model.predict(rms_scaled)
             instant_loss = float(np.mean(np.square(rms_scaled - reconstruction)))
@@ -404,6 +410,7 @@ if start_btn:
                 else:
                     y_spectrum_max = 0.2
                 ax.set_ylim(0, y_spectrum_max)
+
 
                 ax.set_xlabel("Frequency (Hz)", color="#cbd5e1", fontsize=8)
                 ax.set_ylabel("Amplitude", color="#cbd5e1", fontsize=8)
