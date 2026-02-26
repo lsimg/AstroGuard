@@ -25,7 +25,7 @@ AI anomaly scores are cross-validated using **Fast Fourier Transform (FFT)** spe
 
 This hybrid approach increases interpretability and reliability.
 
-### 🛰 Edge-Optimized Architecture  
+### Edge-Optimized Architecture  
 
 Designed for onboard satellite processors:
 
@@ -47,7 +47,7 @@ Streamlit-based monitoring interface providing:
 
 ---
 
-## 🛠 Technology Stack
+## Technology Stack
 
 | Layer | Tools |
 |-------|-------|
@@ -137,6 +137,6 @@ streamlit run app.py
 
 ---
 
-## 📜 License
+## License
 
 MIT License
